@@ -1,3 +1,4 @@
+Passing props between Stateless and Stateful component
 - A stateful component class defines a function that calls this.setState. (Parent.js, lines 11-15)
 - The stateful component passes that function down to a stateless component. (Parent.js, line 20)
 - That stateless component class defines a function that calls the passed-down function, and that can take an event object as an argument. (Child.js, lines 4-7)
