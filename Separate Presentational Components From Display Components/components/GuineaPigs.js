@@ -1,3 +1,5 @@
+//This is Presentational Component - has one render function, and no other properties.
+
 var React = require('react');
 
 var GuineaPigs = React.createClass({
