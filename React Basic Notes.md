@@ -376,6 +376,46 @@ This is potentially confusing. props and state store dynamic information. Dynami
 - A React component should use PROPS to store information that can be changed, but can only be changed by a different component.
 - A React component should use STATE to store information that the component itself can change.
 
+--- Automatic Binding ---
+Take a look at changeName. You can see that it calls this.setState.
+
+In order for changeName to work, the "this" in this.setState must be the instructions object of the Parent class. You're trying to set a <Parent />'s state, not some other type of component's state.
+
+The meaning of this is determined when a function is called, not when when a function is defined. changeName is called by an event listener... on a <Child />. Shouldn't that make this point to the instructions object of the Child class, instead of the Parent class?
+
+You'd think that it would! Fortunately it doesn't happen that way, thanks to some React magic called automatic binding.
+
+Automatic binding allows you to pass functions as props, and any this values in the functions' bodies will automatically refer to whatever they referred to when the function was defined. No binding to worry about!
+	Parent.js:
+		var React = require('react');
+		var ReactDOM = require('react-dom');
+		var Child = require('./Child');
+
+		var Parent = React.createClass({
+		  getInitialState: function () {
+		    return { name: 'Frarthur' };
+		  },
+
+		  changeName: function(newName) {
+		    this.setState({
+		      name: newName
+		    })
+		  },
+		  render: function () {
+		    return (
+		    	<Child 
+		    		name={this.state.name} onChange={this.changeName} /> //automatic bindling: this ở đây ko refer đến Child.js mà refer đến object nó được define (thay vì object nó được call) là Parent.js
+		    );
+		  }
+		});
+
+		ReactDOM.render(
+			<Parent />, 
+			document.getElementById('app')
+		);
+
+
+
 --- Styling in React ---
 - <h1 style = {{ background: 'red', color: 'blue' }}> content h1 </h1> //value của style là 1 object
 - If you inject an object literal into JSX, and your entire injection is only that object literal, then you will end up with double curly braces. There's nothing unusual about how they work, but they look funny and can be confusing.
